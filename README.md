@@ -1,53 +1,61 @@
+# Task Scheduler for ESP32
 
-# Task Scheduler for ESP32 🧠⚡
+![C++](https://img.shields.io/badge/C%2B%2B-00599C?logo=cplusplus&logoColor=white)
+![ESP32](https://img.shields.io/badge/ESP32-E7352C?logo=espressif&logoColor=white)
+![Web UI](https://img.shields.io/badge/UI-web%20%2F%20cyberpunk-6C4AB6)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-A cyberpunk-themed task scheduler for ESP32 with NTP-based time synchronization, daily plan management, and a responsive web interface.
+A cyberpunk-styled daily task scheduler that runs entirely on an ESP32: NTP-synced clock, several switchable day plans, EEPROM persistence and a browser UI served straight from the board.
 
-## 🔧 Features
-- Manage multiple daily task plans
-- Cyberpunk-styled HTML/CSS web UI
-- NTP time synchronization with fallback browser time
-- EEPROM-based persistent storage
-- Multiple task entries per plan (up to 30 per plan)
-- Switch between plans via UI
+## How it works
 
-## 📦 Hardware Requirements
-- ESP32 Dev Board (e.g., DOIT ESP32 DEVKIT V1)
-- 3.3V Power Supply (via USB or external)
-- Wi-Fi 2.4GHz access
+```mermaid
+flowchart LR
+    B[Browser] -->|HTTP :80| W[WebServer on ESP32]
+    W --> P[Plan store<br/>up to 30 tasks each]
+    P --> E[(EEPROM 4096 B)]
+    N[NTP server] --> T[Time sync<br/>every 30 min]
+    T --> S[Scheduler loop<br/>every 10 s]
+    S --> A[Trigger task actions]
+```
 
-## 🌐 Network Requirements
-- Wi-Fi SSID/password must be hardcoded or configured
-- Internet access for NTP server
-- Optional: Local network access for browser time fallback
+## Features
 
-## ⏱️ Time Synchronization and Simulation
-- Primary: syncs time from NTP every 30 minutes
-- Secondary: falls back to time received from user's browser
-- Time-based execution loop runs every 10 seconds
+- Multiple daily plans, switchable from the UI
+- Cyberpunk-themed HTML/CSS interface served on port 80
+- NTP time synchronisation with browser time as fallback
+- EEPROM-based persistence (4096 bytes, saved after every change)
+- Up to 30 task entries per plan
 
-## 💾 EEPROM Storage
-- Total EEPROM size: 4096 bytes
-- Stores plans as serialized structures
-- Automatically persists after changes
+## Hardware and network
 
-## 🖥️ Web Interface
-- Hosted on ESP32 using WebServer on port 80
-- UI allows:
-  - Viewing/Editing tasks
-  - Switching between saved plans
-  - Viewing current synchronized time
+- ESP32 development board (e.g. DOIT ESP32 DEVKIT V1)
+- 3.3 V supply (USB or external)
+- 2.4 GHz Wi-Fi network and internet access for NTP
 
-## 🚀 Getting Started
-1. Flash firmware to ESP32
-2. Connect to configured Wi-Fi
-3. Access device IP in browser (shown in serial monitor)
-4. Set or edit your task plans via the UI
+Wi-Fi credentials live in `wifi_config.h`. Copy it, fill in your own values and keep the real file out of commits.
 
-## 🛠️ Future Improvements
-- Task notification via buzzer or LED
-- OTA updates and plan import/export
-- Dark/light theme toggle
+## Getting started
 
-## 🧾 License
-This project is licensed under the MIT License.
+1. Flash `task_schedule.ino` to the ESP32.
+2. Connect to the configured Wi-Fi network.
+3. Open the IP address printed in the serial monitor.
+4. Create or edit your plans in the browser UI.
+
+## Files
+
+```
+task_schedule.ino               # firmware (web server + scheduler)
+wifi_config.h                   # Wi-Fi credentials
+docs/task_scheduler_documentation.pdf
+```
+
+## Roadmap
+
+- Buzzer / LED notifications for due tasks
+- OTA updates and plan import / export
+- Light / dark theme switch
+
+## License
+
+MIT
